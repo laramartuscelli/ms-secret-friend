@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="IU-263.7307.200">
+    <data-source name="SECRET_FRIEND_DB@localhost" uuid="19b45282-eb18-4700-877a-7a270ef7d2d9">
+      <database-info product="Mongo DB" version="9.0.4" jdbc-version="4.2" driver-name="MongoDB JDBC Driver" driver-version="1.24" dbms="MONGO" exact-version="9.0.4" exact-driver-version="1.24" />
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <secret-storage>master_key</secret-storage>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="@" />
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+  </component>
+</project>
