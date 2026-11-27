@@ -2,6 +2,7 @@ package org.secretfriend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,10 @@ public class UserController {
 
     @PostMapping
     @Operation(description = "Sign up new User")
-    @ApiResponse(responseCode = "201", description = "Created")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created"),
+            @ApiResponse(responseCode = "422", description = "There's already an user with this email")
+    })
     public ResponseEntity<Void> signup(@RequestBody @Valid SignupRequest request) {
 
         String userId = userService.createUser(SignupDto.from(request));
