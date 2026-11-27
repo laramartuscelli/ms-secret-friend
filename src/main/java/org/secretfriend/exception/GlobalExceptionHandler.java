@@ -22,6 +22,8 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     private static final String DEFAULT_LOG_MESSAGE = "{}: {}";
+    private static final String WITH_SESSION_ID = DEFAULT_LOG_MESSAGE + " | Session ID: {}";
+    private static final String WITH_SESSION_ID_AND_PARTICIPANT_NAME = WITH_SESSION_ID + " | Participant's Name: {}";
     private static final String GENERIC_EXCEPTION_LOG_MESSAGE = "Unexpected error on path: {} | " + DEFAULT_LOG_MESSAGE + " | {}";
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -66,10 +68,29 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler(ParticipantNotFoundException.class)
+    public ProblemDetail handleParticipantNotFoundException(ParticipantNotFoundException ex) {
+
+        log.warn(WITH_SESSION_ID_AND_PARTICIPANT_NAME, ex.getClass().getSimpleName(), ex.getMessage(), ex.getSessionId(), ex.getParticipantName());
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage()
+        );
+
+        problemDetail.setTitle(HttpStatus.NOT_FOUND.getReasonPhrase());
+        return problemDetail;
+    }
+
     @ExceptionHandler(NotFoundException.class)
     public ProblemDetail handleNotFoundException(NotFoundException ex) {
 
-        log.warn(DEFAULT_LOG_MESSAGE, ex.getClass().getSimpleName(), ex.getMessage());
+        if (ex.getSessionId() != null) {
+            log.warn(WITH_SESSION_ID, ex.getClass().getSimpleName(), ex.getMessage(), ex.getSessionId());
+        }
+        else {
+            log.warn(DEFAULT_LOG_MESSAGE, ex.getClass().getSimpleName(), ex.getMessage());
+        }
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
                 HttpStatus.NOT_FOUND,

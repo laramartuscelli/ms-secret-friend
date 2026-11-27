@@ -6,14 +6,14 @@ import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
-public class Person {
+public class Participant {
 
     private String name;
 
     @Setter
     private String secretFriend;
 
-    public Person(String name) {
+    public Participant(String name) {
         this.name = name;
     }
 }

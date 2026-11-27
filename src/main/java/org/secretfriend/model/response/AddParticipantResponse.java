@@ -1,20 +1,20 @@
 package org.secretfriend.model.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.secretfriend.model.Person;
+import org.secretfriend.model.Participant;
 import org.secretfriend.model.document.Session;
 
 import java.util.List;
 
-public record AddPersonResponse(
+public record AddParticipantResponse(
 
         @JsonProperty("session_id") String sessionId,
         List<PersonResponse> participants
 ) {
 
-    public static AddPersonResponse from(Session session) {
+    public static AddParticipantResponse from(Session session) {
 
-        return new AddPersonResponse(
+        return new AddParticipantResponse(
                 session.getId(),
                 PersonResponse.from(session.getParticipants())
         );
@@ -24,7 +24,7 @@ public record AddPersonResponse(
             String name
     ) {
 
-        public static List<PersonResponse> from(List<Person> participants) {
+        public static List<PersonResponse> from(List<Participant> participants) {
 
             return participants.stream()
                     .map(p -> new PersonResponse(p.getName()))

@@ -1,12 +1,13 @@
 package org.secretfriend.model.document;
 
 import lombok.Getter;
-import org.secretfriend.model.Person;
+import org.secretfriend.model.Participant;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Getter
@@ -15,28 +16,37 @@ public class Session {
 
     @Id
     private String id;
-    private List<Person> participants;
+    private List<Participant> participants;
+    private boolean sorted;
 
     public Session() {
         participants = new ArrayList<>();
+        sorted = false;
     }
 
-    public void addParticipant(Person person) {
-        participants.add(person);
+    public void addParticipant(Participant participant) {
+        participants.add(participant);
     }
 
     public boolean hasParticipant(String name) {
-        return participants.stream().anyMatch(p -> p.getName().contentEquals(name));
+        return participants.stream().anyMatch(p -> p.getName().equalsIgnoreCase(name));
     }
 
-    public void removeParticipant(String name) {
+    public Optional<Participant> getParticipant(String name) {
+
+        return participants.stream()
+                .filter(p -> p.getName().equalsIgnoreCase(name))
+                .findFirst();
+    }
+
+    public void removeParticipant(Participant participant) {
 
         // Remove participant
-        participants.removeIf(p -> p.getName().contentEquals(name));
+        participants.remove(participant);
 
         // Remove participant as secret friend
         participants.stream()
-                .filter(p -> p.getSecretFriend().contentEquals(name))
+                .filter(p -> p.getSecretFriend().equalsIgnoreCase(participant.getName()))
                 .forEach(p -> p.setSecretFriend(null));
     }
 
@@ -44,12 +54,14 @@ public class Session {
 
         Random random = new Random();
 
-        List<Person> sortingList = new ArrayList<>(participants);
+        List<Participant> sortingList = new ArrayList<>(participants);
         participants.forEach(p -> {
             if (sortingList.isEmpty()) return;
-            Person randomPerson = sortingList.get(random.nextInt(sortingList.size()));
-            p.setSecretFriend(randomPerson.getName());
-            sortingList.remove(randomPerson);
+            Participant randomParticipant = sortingList.get(random.nextInt(sortingList.size()));
+            p.setSecretFriend(randomParticipant.getName());
+            sortingList.remove(randomParticipant);
         });
+
+        sorted = true;
     }
 }
