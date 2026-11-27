@@ -1,3 +1,7 @@
 spring:
   mongodb:
     uri: mongodb://localhost:27017/SECRET_FRIEND_DB
+
+  application:
+    name: ms-secret-friend
+    version: '@project.version@'
